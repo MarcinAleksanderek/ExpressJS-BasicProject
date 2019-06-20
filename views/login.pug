@@ -1,0 +1,14 @@
+html
+	head
+		title= name
+	body
+		img.className#IdName(src="https://ih0.redbubble.net/image.370343333.1917/flat,550x550,075,f.jpg" alt="Image Title" max-width="300")
+		h1= "Please Log In:"
+		form(method='POST' action='/register')
+		div.form-group
+			label(for='name') Name:
+			input#name.form-control(type='text', placeholder='email addres' name='email')
+		div.form-group
+			label(for='pw') Password:
+			input#pw.form-control(type='password' name='password')
+		a(href= url) URL

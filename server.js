@@ -1,5 +1,7 @@
 var express = require('express');
 var app = express();
+app.set('view engine', 'pug');
+app.set('views', './views');
 
 app.use('/store', function (req, res, next) {
 	console.log('Jestem pośrednikiem przy żądaniu do /store');
@@ -13,6 +15,31 @@ app.get('/', function (req, res) {
 app.get('/store', function (req, res) {
 	res.send('To jest sklep');
 });
+
+app.get('/first-template', function (req, res) {
+	res.render('first-template');
+});
+
+app.get('/dynamic-view', function (req, res) {
+	res.render('dynamic', {
+		name: "Moja dynamiczna strona",
+		url: "http://www.google.com"
+	});
+});
+
+app.get('/login', function (req, res) {
+	res.render('login', {
+		name: "Login Page",
+		url: "/congratz"
+	});
+});
+
+app.get('/congratz', function (req, res) {
+	res.render('congratz', {
+		name: "Main Page",
+	});
+});
+
 
 app.listen(3000);
 app.use(function (req, res, next) {
