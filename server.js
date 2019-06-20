@@ -3,10 +3,7 @@ var app = express();
 app.use(express.static('assets'));
 
 app.get('/', function (req, res) {
-	//u mnie z automatu serwuje plik index.html bo udostepnia folder assets. 
-	//nie da sie w takim razie zdefiniowac defaulowego zachowania dla ogólnego adresu, jedyna opcja to zmienić nazwe index.html na inną?
-	res.send('Hello world');
-	//res.sendFile('/index.html')
+	res.sendFile('/index.html')
 });
 
 app.get('/userform', function (req, res) {
