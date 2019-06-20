@@ -1,47 +1,64 @@
 var express = require('express');
+var passport = require('passport');
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var config = require('./config');
+bodyParser = require('body-parser');
 var app = express();
+var googleProfile = {};
+app.use(bodyParser.json());
+
+passport.serializeUser(function (user, done) {
+	done(null, user);
+});
+passport.deserializeUser(function (obj, done) {
+	done(null, obj);
+});
+
+passport.use(new GoogleStrategy({
+	clientID: config.GOOGLE_CLIENT_ID,
+	clientSecret: config.GOOGLE_CLIENT_SECRET,
+	callbackURL: config.CALLBACK_URL
+},
+	function (accessToken, refreshToken, profile, cb) {
+		googleProfile = {
+			id: profile.id,
+			displayName: profile.displayName
+		};
+		cb(null, profile);
+	}
+));
+
 app.set('view engine', 'pug');
 app.set('views', './views');
 
-app.use('/store', function (req, res, next) {
-	console.log('Jestem pośrednikiem przy żądaniu do /store');
-	next();
-});
+app.use(express.static('css'));
+//app.use(express.static('assets'));
+app.use('/assets', express.static('public'));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 app.get('/', function (req, res) {
-	res.send('Hello world!');
+	res.render('index', { user: req.user });
 });
 
-app.get('/store', function (req, res) {
-	res.send('To jest sklep');
+app.get('/logged', function (req, res) {
+	res.render('logged', { user: googleProfile });
 });
 
-app.get('/first-template', function (req, res) {
-	res.render('first-template');
-});
-
-app.get('/dynamic-view', function (req, res) {
-	res.render('dynamic', {
-		name: "Moja dynamiczna strona",
-		url: "http://www.google.com"
-	});
-});
-
-app.get('/login', function (req, res) {
-	res.render('login', {
-		name: "Login Page",
-		url: "/congratz"
-	});
-});
-
-app.get('/congratz', function (req, res) {
-	res.render('congratz', {
-		name: "Main Page",
-	});
-});
-
+app.get('/auth/google',
+	passport.authenticate('google', {
+		scope: ['profile', 'email']
+	}));
+app.get('/auth/google/callback',
+	passport.authenticate('google', {
+		successRedirect: '/logged',
+		failureRedirect: '/'
+	}));
 
 app.listen(3000);
+
 app.use(function (req, res, next) {
-	res.status(404).send('Wybacz, nie mogliśmy odnaleźć tego, czego żądasz!')
+	res.status(404).send('Sorry, we could not find what you want!')
 });

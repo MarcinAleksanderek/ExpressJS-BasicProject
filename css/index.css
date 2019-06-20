@@ -1,0 +1,31 @@
+body {
+	margin: 0 auto;
+}
+
+.wrapper {
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	flex-direction: column;
+}
+
+.button {
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	padding: 12px;
+}
+
+a {
+	text-transform: uppercase;
+	text-decoration: none;
+	color: #fff;
+	background:rgb(101, 34, 114);
+	padding: 12px;
+	border-radius: 15px;
+	cursor: pointer;
+}
+
+a:hover{
+	background:rgb(125, 45, 141);
+}
